@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -9,7 +9,29 @@ function MovieApp() {
   const [description, setDescription] = useState("");
   const [rating, setRating] = useState("");
 
+  const [genres, setGenres] = useState([]);
+  const [selectedGenres, setSelectedGenres] = useState([]);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/genres");
+        const data = await res.json();
+        setGenres(data);
+      } catch (err) {
+        console.error("Error fetching genres:", err);
+      }
+    };
+    fetchGenres();
+  }, []);
+
+  const handleGenreChange = (id) => {
+    setSelectedGenres((prev) =>
+      prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]
+    );
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,6 +42,7 @@ function MovieApp() {
       director,
       description,
       rating: Number(rating),
+      genres: selectedGenres,
     };
 
     try {
@@ -39,7 +62,9 @@ function MovieApp() {
       setDirector("");
       setDescription("");
       setRating("");
-      toast("Movie added successfully");
+      setSelectedGenres([]);
+
+      toast.success("Movie added successfully");
       navigate("/movies");
     } catch (err) {
       console.error("Error adding movie:", err);
@@ -92,10 +117,28 @@ function MovieApp() {
           onChange={(e) => setRating(e.target.value)}
           required
         />
+
+        <h3>Select Genres</h3>
+        <ul className="genre-checkbox-list">
+          {genres.map((genre) => (
+            <li key={genre.id}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={selectedGenres.includes(genre.id)}
+                  onChange={() => handleGenreChange(genre.id)}
+                />
+                {genre.name}
+              </label>
+            </li>
+          ))}
+        </ul>
+
         <button className="submit-button" type="submit">
           Add Movie
         </button>
       </form>
+
       <ToastContainer />
     </div>
   );

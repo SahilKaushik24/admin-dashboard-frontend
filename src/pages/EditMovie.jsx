@@ -10,6 +10,8 @@ function EditMovie() {
     title: "",
     director: "",
     releaseYear: "",
+    description: "",
+    rating: "",
   });
 
   useEffect(() => {

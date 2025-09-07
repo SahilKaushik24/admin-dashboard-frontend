@@ -44,8 +44,22 @@ function MovieList() {
           <li key={movie.id}>
             <strong>{movie.title}</strong> - {movie.director} (
             {movie.releaseYear})
-            {movie.description && <p>**Description:** {movie.description}</p>}
-            {movie.rating && <p>**Rating:** {movie.rating}/10</p>}
+            {movie.description && (
+              <p>
+                <strong>Description:</strong> {movie.description}
+              </p>
+            )}
+            {movie.rating && (
+              <p>
+                <strong>Rating:</strong> {movie.rating}/10
+              </p>
+            )}
+            {movie.genres && movie.genres.length > 0 && (
+              <p>
+                <strong>Genres:</strong>{" "}
+                {movie.genres.map((mg) => mg.genre.name).join(", ")}
+              </p>
+            )}
             <Link to={`/movies/${movie.id}`}>
               <button className="edit-button">Edit</button>
             </Link>

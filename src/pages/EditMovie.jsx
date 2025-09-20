@@ -10,7 +10,7 @@ function EditMovie() {
     title: "",
     director: "",
     releaseYear: "",
-    description: "",
+    overview: "",
     rating: "",
   });
 
@@ -85,10 +85,10 @@ function EditMovie() {
         />
         <input
           className="input"
-          name="description"
+          name="overview"
           type="text"
-          placeholder="Description"
-          value={formData.description}
+          placeholder="Overview"
+          value={formData.overview}
           onChange={handleChange}
           required
         />

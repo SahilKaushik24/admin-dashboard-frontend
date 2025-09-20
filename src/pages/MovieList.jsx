@@ -44,9 +44,9 @@ function MovieList() {
           <li key={movie.id}>
             <strong>{movie.title}</strong> - {movie.director} (
             {movie.releaseYear})
-            {movie.description && (
+            {movie.overview && (
               <p>
-                <strong>Description:</strong> {movie.description}
+                <strong>Overview:</strong> {movie.overview}
               </p>
             )}
             {movie.rating && (

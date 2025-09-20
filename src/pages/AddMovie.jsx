@@ -6,7 +6,7 @@ function MovieApp() {
   const [title, setTitle] = useState("");
   const [releaseYear, setReleaseYear] = useState("");
   const [director, setDirector] = useState("");
-  const [description, setDescription] = useState("");
+  const [overview, setOverview] = useState("");
   const [rating, setRating] = useState("");
 
   const [genres, setGenres] = useState([]);
@@ -40,7 +40,7 @@ function MovieApp() {
       title,
       releaseYear: Number(releaseYear),
       director,
-      description,
+      overview,
       rating: Number(rating),
       genres: selectedGenres,
     };
@@ -60,7 +60,7 @@ function MovieApp() {
       setTitle("");
       setReleaseYear("");
       setDirector("");
-      setDescription("");
+      setOverview("");
       setRating("");
       setSelectedGenres([]);
 
@@ -104,9 +104,9 @@ function MovieApp() {
         <input
           className="input"
           type="text"
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Overview"
+          value={overview}
+          onChange={(e) => setOverview(e.target.value)}
           required
         />
         <input

@@ -5,6 +5,7 @@ import AddMovie from "./pages/AddMovie";
 import MovieList from "./pages/MovieList";
 import EditMovie from "./pages/EditMovie";
 import GenreList from "./pages/AddGenre";
+import UserList from "./pages/UserList";
 function App() {
   return (
     <div style={{ display: "flex" }}>
@@ -16,6 +17,7 @@ function App() {
           <Route path="/movies" element={<MovieList />} />
           <Route path="/movies/:id" element={<EditMovie />} />
           <Route path="/genres" element={<GenreList />} />
+          <Route path="/users" element={<UserList />} />
         </Routes>
       </div>
     </div>

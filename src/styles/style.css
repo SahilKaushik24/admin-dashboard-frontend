@@ -275,3 +275,93 @@ table th {
 .genre-checkbox-list li:hover {
   background: #ddd;
 }
+
+.users-page {
+  padding: 20px;
+  margin-left: 220px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #ffffff;
+  min-height: 100vh;
+}
+
+.users-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 18px;
+  color: #000000;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #f5efef;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.users-table th,
+.users-table td {
+  padding: 14px 18px;
+  text-align: left;
+}
+
+.users-table th {
+  background-color: #6b6a6e;
+  font-weight: 600;
+  font-size: 14px;
+  color: #ffffff;
+  border-bottom: 2px solid #ddd;
+}
+
+.users-table td {
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  color: #000000;
+}
+
+.users-table tr:hover {
+  background-color: #fafafa;
+  transition: background 0.3s ease-in-out;
+}
+
+.users-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Make table responsive */
+@media (max-width: 768px) {
+  .users-table,
+  .users-table thead,
+  .users-table tbody,
+  .users-table th,
+  .users-table td,
+  .users-table tr {
+    display: block;
+  }
+
+  .users-table tr {
+    margin-bottom: 15px;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    padding: 10px;
+  }
+
+  .users-table th {
+    display: none;
+  }
+
+  .users-table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: none;
+  }
+
+  .users-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #444;
+  }
+}

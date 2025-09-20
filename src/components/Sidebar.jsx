@@ -37,6 +37,14 @@ function Sidebar() {
             Genres
           </NavLink>
         </li>
+        <li>
+          <NavLink
+            to="/users"
+            className={({ isActive }) => (isActive ? "active-link" : "")}
+          >
+            Users
+          </NavLink>
+        </li>
       </ul>
     </div>
   );

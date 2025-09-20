@@ -74,6 +74,24 @@ function EditMovie() {
           onChange={handleChange}
           required
         />
+        <input
+          className="input"
+          name="rating"
+          type="text"
+          placeholder="Rating"
+          value={formData.rating}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="input"
+          name="description"
+          type="text"
+          placeholder="Description"
+          value={formData.description}
+          onChange={handleChange}
+          required
+        />
         <button className="submit-button" type="submit">
           Update
         </button>

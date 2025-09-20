@@ -102,11 +102,17 @@ function GenreList() {
           <li key={genre.id}>
             {genre.name} ({genre.status ? "Active" : "Inactive"}){" "}
             {genre.status ? (
-              <button onClick={() => handleToggleStatus(genre.id, false)}>
+              <button
+                className="delete-button"
+                onClick={() => handleToggleStatus(genre.id, false)}
+              >
                 Deactivate
               </button>
             ) : (
-              <button onClick={() => handleToggleStatus(genre.id, true)}>
+              <button
+                className="edit-button"
+                onClick={() => handleToggleStatus(genre.id, true)}
+              >
                 Activate
               </button>
             )}

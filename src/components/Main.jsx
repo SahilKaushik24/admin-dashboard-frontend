@@ -4,7 +4,7 @@ function Main() {
       <main className="main">
         <div className="header">
           <h1>Dashboard</h1>
-          <p>Hello, Sahil 👋</p>
+          <p>Hello, Admin</p>
         </div>
         <div className="cards">
           <div className="card">

@@ -5,16 +5,25 @@ import { toast } from "react-toastify";
 function MovieList() {
   const [movies, setMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [pageInfo, setPageInfo] = useState({ totalPages: 1, totalMovies: 0 });
 
   useEffect(() => {
-    fetch(`http://localhost:5000/movies?title=${searchTerm}`)
+    fetch(
+      `http://localhost:5000/movies?title=${searchTerm}&page=${page}&limit=10`
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log("Fetched movies:", data);
-        setMovies(data);
+        setMovies(data.movies || []);
+        setPageInfo({
+          page: data.page,
+          totalPages: data.totalPages,
+          totalMovies: data.totalMovies,
+        });
       })
       .catch((err) => console.log("Error fetching movies", err));
-  }, [searchTerm]);
+  }, [searchTerm, page]);
 
   const handleDelete = async (id) => {
     try {
@@ -37,7 +46,10 @@ function MovieList() {
         type="text"
         placeholder="Search by title..."
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={(e) => {
+          setSearchTerm(e.target.value);
+          setPage(1);
+        }}
       />
       <ul className="list">
         {movies.map((movie) => (
@@ -72,6 +84,20 @@ function MovieList() {
           </li>
         ))}
       </ul>
+      <div className="pagination">
+        <button disabled={page <= 1} onClick={() => setPage(page - 1)}>
+          Prev
+        </button>
+        <span>
+          Page {page} of {pageInfo.totalPages}
+        </span>
+        <button
+          disabled={page >= pageInfo.totalPages}
+          onClick={() => setPage(page + 1)}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 }

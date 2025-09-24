@@ -9,20 +9,26 @@ function MovieList() {
   const [pageInfo, setPageInfo] = useState({ totalPages: 1, totalMovies: 0 });
 
   useEffect(() => {
-    fetch(
-      `http://localhost:5000/movies?title=${searchTerm}&page=${page}&limit=10`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Fetched movies:", data);
+    const fetchMovies = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:5000/movies?title=${searchTerm}&page=${page}&limit=10`
+        );
+        const data = await res.json();
+
         setMovies(data.movies || []);
         setPageInfo({
-          page: data.page,
+          page: data.pages,
           totalPages: data.totalPages,
           totalMovies: data.totalMovies,
         });
-      })
-      .catch((err) => console.log("Error fetching movies", err));
+      } catch (err) {
+        console.error("Error fetching movies:", err);
+        toast.error("Failed to fetch movies");
+      }
+    };
+
+    fetchMovies();
   }, [searchTerm, page]);
 
   const handleDelete = async (id) => {
@@ -66,10 +72,10 @@ function MovieList() {
                 <strong>Rating:</strong> {movie.rating}/10
               </p>
             )}
-            {movie.genres && movie.genres.length > 0 && (
+            {movie.movieGenres && movie.movieGenres.length > 0 && (
               <p>
                 <strong>Genres:</strong>{" "}
-                {movie.genres.map((mg) => mg.genre.name).join(", ")}
+                {movie.movieGenres.map((mg) => mg.genre.name).join(", ")}
               </p>
             )}
             <Link to={`/movies/${movie.id}`}>
@@ -79,11 +85,12 @@ function MovieList() {
               className="delete-button"
               onClick={() => handleDelete(movie.id)}
             >
-              delete
+              Delete
             </button>
           </li>
         ))}
       </ul>
+
       <div className="pagination">
         <button disabled={page <= 1} onClick={() => setPage(page - 1)}>
           Prev

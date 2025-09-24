@@ -8,7 +8,6 @@ function MovieApp() {
   const [director, setDirector] = useState("");
   const [overview, setOverview] = useState("");
   const [rating, setRating] = useState("");
-
   const [genres, setGenres] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
 
@@ -22,10 +21,11 @@ function MovieApp() {
         setGenres(data);
       } catch (err) {
         console.error("Error fetching genres:", err);
+        toast.error("Failed to fetch genres");
       }
     };
     fetchGenres();
-  }, []);
+  }, []); // No ESLint warning, fetchGenres is inside useEffect
 
   const handleGenreChange = (id) => {
     setSelectedGenres((prev) =>
@@ -57,6 +57,7 @@ function MovieApp() {
         throw new Error(errorData.error || "Failed to add movie");
       }
 
+      // Reset form
       setTitle("");
       setReleaseYear("");
       setDirector("");

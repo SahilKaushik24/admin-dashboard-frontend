@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 const API_URL = "http://localhost:5000";
@@ -8,7 +7,7 @@ function UserList() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    async function fetchUsers() {
+    const fetchUsers = async () => {
       try {
         const token = localStorage.getItem("token");
         const res = await fetch(`${API_URL}/users`, {
@@ -16,16 +15,18 @@ function UserList() {
             Authorization: `Bearer ${token}`,
           },
         });
+
         if (!res.ok) throw new Error("Failed to fetch users");
 
         const data = await res.json();
         setUsers(data);
         toast.success("Users loaded successfully");
       } catch (err) {
-        console.log("Error fetching users", err);
+        console.error("Error fetching users:", err);
         toast.error("Failed to fetch users");
       }
-    }
+    };
+
     fetchUsers();
   }, []);
 
@@ -43,17 +44,23 @@ function UserList() {
           </tr>
         </thead>
         <tbody>
-          {users.map((u) => (
-            <tr key={u.id}>
-              <td data-label="ID">{u.id}</td>
-              <td data-label="Name">{u.name}</td>
-              <td data-label="Email">{u.email}</td>
-              <td data-label="Role">{u.role}</td>
-              <td data-label="Created At">
-                {new Date(u.createdAt).toLocaleDateString()}
-              </td>
+          {users.length > 0 ? (
+            users.map((user) => (
+              <tr key={user.id}>
+                <td data-label="ID">{user.id}</td>
+                <td data-label="Name">{user.name}</td>
+                <td data-label="Email">{user.email}</td>
+                <td data-label="Role">{user.role ? "Admin" : "User"}</td>
+                <td data-label="Created At">
+                  {new Date(user.createdAt).toLocaleDateString()}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5">No users found.</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>

@@ -1,57 +1,73 @@
 import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-function GenreList() {
+function AddGenre() {
   const [genres, setGenres] = useState([]);
   const [newGenre, setNewGenre] = useState("");
   const [filter, setFilter] = useState("all");
 
-  const fetchGenres = async (filter = "all") => {
-    let url = "http://localhost:5000/genres";
-    if (filter === "active") url += "?status=active";
-    if (filter === "inactive") url += "?status=inactive";
-
-    const res = await fetch(url);
-    const data = await res.json();
-    setGenres(data);
-  };
-
   useEffect(() => {
+    const fetchGenres = async () => {
+      let url = "http://localhost:5000/genres";
+      if (filter === "active") url += "?status=active";
+      if (filter === "inactive") url += "?status=inactive";
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Failed to fetch genres");
+        const data = await res.json();
+        setGenres(data);
+      } catch (err) {
+        console.error("Error fetching genres:", err);
+        toast.error("Failed to fetch genres");
+      }
+    };
+
     fetchGenres();
-  }, []);
+  }, [filter]);
 
   const handleAddGenre = async (e) => {
     e.preventDefault();
-    if (!newGenre.trim()) return;
+    if (!newGenre.trim()) return toast.error("Genre name cannot be empty");
 
-    const res = await fetch("http://localhost:5000/genres", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: newGenre }),
-    });
+    try {
+      const res = await fetch("http://localhost:5000/genres", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newGenre }),
+      });
 
-    if (res.ok) {
-      setNewGenre("");
-      fetchGenres();
-    } else {
-      const err = await res.json();
-      alert(err.error);
+      if (res.ok) {
+        toast.success("Genre added!");
+        setNewGenre("");
+        setFilter("all"); // refresh list
+      } else {
+        const err = await res.json();
+        toast.error(err.error || "Failed to add genre");
+      }
+    } catch (err) {
+      console.error("Error adding genre:", err);
+      toast.error("Failed to add genre");
     }
   };
 
   const handleToggleStatus = async (id, status) => {
-    await fetch(`http://localhost:5000/genres/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
-    });
-    fetchGenres();
-  };
+    try {
+      const res = await fetch(`http://localhost:5000/genres/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
 
-  const filteredGenres = genres.filter((genre) => {
-    if (filter === "active") return genre.status === true;
-    if (filter === "inactive") return genre.status === false;
-    return true;
-  });
+      if (!res.ok) throw new Error("Failed to update status");
+      toast.success(`Genre ${status ? "activated" : "deactivated"}!`);
+      setFilter("all"); // refresh list
+    } catch (err) {
+      console.error("Error updating genre:", err);
+      toast.error("Failed to update genre status");
+    }
+  };
 
   return (
     <div className="main">
@@ -71,56 +87,28 @@ function GenreList() {
       </form>
 
       <div className="filter-buttons">
-        <button
-          onClick={() => {
-            setFilter("active");
-            fetchGenres("active");
-          }}
-        >
-          Active
-        </button>
-        <button
-          onClick={() => {
-            setFilter("inactive");
-            fetchGenres("inactive");
-          }}
-        >
-          Inactive
-        </button>
-        <button
-          onClick={() => {
-            setFilter("all");
-            fetchGenres("all");
-          }}
-        >
-          All
-        </button>
+        <button onClick={() => setFilter("active")}>Active</button>
+        <button onClick={() => setFilter("inactive")}>Inactive</button>
+        <button onClick={() => setFilter("all")}>All</button>
       </div>
 
       <ul className="list">
-        {filteredGenres.map((genre) => (
+        {genres.map((genre) => (
           <li key={genre.id}>
-            {genre.name} ({genre.status ? "Active" : "Inactive"}){" "}
-            {genre.status ? (
-              <button
-                className="delete-button"
-                onClick={() => handleToggleStatus(genre.id, false)}
-              >
-                Deactivate
-              </button>
-            ) : (
-              <button
-                className="edit-button"
-                onClick={() => handleToggleStatus(genre.id, true)}
-              >
-                Activate
-              </button>
-            )}
+            {genre.name} ({genre.status ? "Active" : "Inactive"})
+            <button
+              className={genre.status ? "delete-button" : "edit-button"}
+              onClick={() => handleToggleStatus(genre.id, !genre.status)}
+            >
+              {genre.status ? "Deactivate" : "Activate"}
+            </button>
           </li>
         ))}
       </ul>
+
+      <ToastContainer position="top-right" autoClose={2000} />
     </div>
   );
 }
 
-export default GenreList;
+export default AddGenre;
